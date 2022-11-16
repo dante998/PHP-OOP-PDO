@@ -71,7 +71,7 @@ class DatabaseConnection {
       'age'=> '75',
       'email' => 'mx123@abv.bg'
     ];
-    $stmt = $this->getConnection()->prepare("INSERT INTO players (".implode(', ', array_keys($data)).") VALUES (:".implode(', :', array_keys($data)).")");
+    $stmt = $this->getConnection()->prepare("INSERT INTO  (".implode(', ', array_keys($data)).") VALUES (:".implode(', :', array_keys($data)).")");
 
     if($stmt->execute($data)){
       echo "Table record inserted";
