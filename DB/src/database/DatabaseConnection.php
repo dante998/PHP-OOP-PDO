@@ -1,20 +1,23 @@
 <?php
-   #SINGLETON PATTERN CONNECTION
+namespace database;
 
-class DatabaseConnection {
+use PDO;
+
+#SINGLETON PATTERN
+
+class DatabaseConnection implements DatabaseInterface {
 
   private static $instance = NULL;
 
   private $conn;
 
-  private $_host = "";
+  private string $_host = "";
 
-  private $_username = "";
+  private string $_username = "";
 
-  private $_password = "";
+  private string $_password = "";
 
-  private $_database = "";
-
+  private string $_database = "";
 
   private function __construct() {
     $this->conn = new PDO("mysql:host={$this->_host};
@@ -33,12 +36,12 @@ class DatabaseConnection {
     return $this->conn;
   }
 
- #------------------------------------------------------------------------------
+
 
   #CRUD METHODS
 
   public function createTable() {
-    $sql = "CREATE TABLE players (
+    $sql = "CREATE TABLE  (
       id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(30) NOT NULL,
       age INT(2),
@@ -48,7 +51,8 @@ class DatabaseConnection {
     $stmt = $this->getConnection()->query($sql);
     if ($stmt) {
       echo "Table created successfully.";
-    }else {
+    }
+    else {
       echo "Table has not been created!<BR>";
       echo "Reason: ", $this->getConnection()->errorCode();
     }
@@ -63,61 +67,43 @@ class DatabaseConnection {
     }
   }
 
-
-  public function insertInto() {
-    $data =[
-      'id' => '1',
-      'name' => 'wst',
-      'age'=> '75',
-      'email' => 'mx123@abv.bg'
+  public function insertIntoTable() {
+    $data = [
+      'id' => '',
+      'name' => '',
+      'age' => '',
+      'email' => ''
     ];
-    $stmt = $this->getConnection()->prepare("INSERT INTO players (".implode(', ', array_keys($data)).") VALUES (:".implode(', :', array_keys($data)).")");
+    $stmt = $this->getConnection()->prepare("INSERT INTO  (" . implode(', ', array_keys($data)) . ") VALUES (:" . implode(', :', array_keys($data)) . ")");
 
-    if($stmt->execute($data)){
+    if ($stmt->execute($data)) {
+      echo "Table record inserted";
+    }
+  }
+
+  public function deleteFromTable($id,$table) {
+    if ($this->getConnection()!=NULL){
+      if ($id != NULL){
+        $query = sprintf("DELETE FROM {$table} WHERE ID = {$id}");
+        $result = $this->getConnection()->query($query);
+        if ($result){
+          echo "Table record deleted";
+        }
+      }
+    }
+  }
+
+  public function updateTable() {
+    $data=[
+      'id' => '',
+      'name' => '',
+    ];
+    $stmt = $this->getConnection()->prepare("UPDATE players SET name =:name WHERE id=:id");
+    if ($stmt->execute($data)) {
       echo "Table record inserted";
     }
   }
 }
 
-
-  #INSTANCE
-
-//$instance = DatabaseConnection::getInstance();
-//$conn = $instance->getConnection();
-//$conn = $instance->createTable();
-//$conn = $instance->deleteTable();
-//$conn = $instance->insertInto();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>
 
